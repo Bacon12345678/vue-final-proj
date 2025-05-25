@@ -1,0 +1,79 @@
+.taskBoard {
+  display: flex;
+  gap: 1rem;
+}
+
+.todo-col,
+.doing-col,
+.done-col {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.todo-col {
+  background-color: aqua;
+}
+
+.doing-col {
+  background-color: antiquewhite;
+}
+
+.done-col {
+  background-color: aquamarine;
+}
+
+.taskItem {
+  background-color: #ffffff;
+  height: 60px;
+  cursor: pointer;
+}
+
+.taskList {
+  height: 300px;
+  background-color: black;
+}
+
+// tasks.scss（或 task-board.scss）
+// @use '../variables/colors' as *;
+// @use '../mixins/flex' as *;
+
+.task-board {
+  display: flex;
+  gap: 1rem;
+
+  &__column {
+    flex: 1;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+  }
+
+  &__list {
+    min-height: 200px;
+    background: #fff;
+    padding: 0.5rem;
+  }
+
+  &__item {
+    background: #fff;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.5rem;
+  }
+
+  &__input {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #ddd;
+  }
+}
+
+.task-board__list {
+  height: 300px;
+  background-color: black;
+}
