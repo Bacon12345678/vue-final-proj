@@ -1,7 +1,7 @@
 <template>
   <div class="task-board__column">
     <h3 class="task-board__header">{{ title }}</h3>
-    <div class="task-board__list" @dragover.prevent @drop="emit('drop', title)">
+    <div class="task-board__list" @dragover.prevent @drop="handleDrop">
       <slot></slot>
       <div
         class="task-board__input"
@@ -29,6 +29,10 @@ const emit = defineEmits<{
   (e: 'submit', status: string, taskName: string): void;
 }>();
 
+const handleDrop = () => {
+  emit('drop', props.title);
+};
+
 const submit = () => {
   const value = taskName.value?.innerText.trim();
   if (value) {
@@ -47,11 +51,4 @@ const handleBlur = () => {
   }
 };
 </script>
-
-<style scoped>
-.task-board__list {
-  height: 300px;
-  background-color: black;
-}
-</style>
 <style scoped src="@/assets/scss/components/tasks.scss"></style>

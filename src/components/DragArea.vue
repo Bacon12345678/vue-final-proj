@@ -105,7 +105,7 @@ const getSelectRect = () => {
 };
 </script>
 
-<style scoped="scss">
+<style>
 .drag-area {
   position: relative;
   user-select: none;

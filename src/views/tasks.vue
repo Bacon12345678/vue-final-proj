@@ -1,49 +1,18 @@
 <template>
-  <div class="taskBoard">
-    <TaskColumn title="none" @drop="onDrop" @submit="addTaskToColumn">
-      <div
-        v-for="task in noneList"
+  <div class="task-board">
+    <TaskColumn
+      v-for="status in statusList"
+      :key="status"
+      :title="status"
+      @drop="onDrop"
+      @submit="addTaskToColumn"
+    >
+      <TaskCard
+        v-for="task in statusMap[status]"
         :key="task.ID"
-        draggable="true"
-        @dragstart="onDragStart(task.ID)"
-        class="task-board__item"
-      >
-        {{ task.Name }}
-      </div>
-    </TaskColumn>
-    <TaskColumn title="todo" @drop="onDrop" @submit="addTaskToColumn">
-      <div
-        v-for="task in todoList"
-        :key="task.ID"
-        draggable="true"
-        @dragstart="onDragStart(task.ID)"
-        class="task-board__item"
-      >
-        {{ task.Name }}
-      </div>
-    </TaskColumn>
-    <TaskColumn title="doing" @drop="onDrop" @submit="addTaskToColumn">
-      <div
-        v-for="task in doingList"
-        :key="task.ID"
-        draggable="true"
-        @dragstart="onDragStart(task.ID)"
-        class="task-board__item"
-      >
-        {{ task.Name }}
-      </div>
-    </TaskColumn>
-
-    <TaskColumn title="done" @drop="onDrop" @submit="addTaskToColumn">
-      <div
-        v-for="task in doneList"
-        :key="task.ID"
-        draggable="true"
-        @dragstart="onDragStart(task.ID)"
-        class="task-board__item"
-      >
-        {{ task.Name }}
-      </div>
+        :task="task"
+        @dragstart="onDragStart"
+      />
     </TaskColumn>
   </div>
 </template>
@@ -51,6 +20,9 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import TaskColumn from '../components/TaskColumn.vue';
+import morePic from '@/assets/pic/more.png';
+import editPic from '@/assets/pic/edit.png';
+import TaskCard from '../components/TaskCard.vue';
 
 interface Task {
   ID: number;
@@ -67,21 +39,16 @@ interface Task {
 //之後要改computed
 const allTaskList = ref<Task[]>([]);
 
-const noneList = computed(() =>
-  allTaskList.value.filter((task) => task.Status === 'none')
-);
+type TaskStatus = 'none' | 'todo' | 'doing' | 'done';
 
-const todoList = computed(() =>
-  allTaskList.value.filter((task) => task.Status === 'todo')
-);
+const statusList: TaskStatus[] = ['none', 'todo', 'doing', 'done'];
 
-const doingList = computed(() =>
-  allTaskList.value.filter((task) => task.Status === 'doing')
-);
-
-const doneList = computed(() =>
-  allTaskList.value.filter((task) => task.Status === 'done')
-);
+const statusMap = computed(() => ({
+  none: allTaskList.value.filter((task) => task.Status === 'none'),
+  todo: allTaskList.value.filter((task) => task.Status === 'todo'),
+  doing: allTaskList.value.filter((task) => task.Status === 'doing'),
+  done: allTaskList.value.filter((task) => task.Status === 'done'),
+}));
 
 const dragginTask = ref<number | null>(null);
 
@@ -101,6 +68,7 @@ const addTaskToColumn = async (taskName: string, status: string) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
       },
       body: JSON.stringify({
         Name: taskName,
@@ -123,7 +91,11 @@ const addTaskToColumn = async (taskName: string, status: string) => {
 
 const fetchTaskList = async () => {
   try {
-    const res = await fetch('http://127.0.0.1/api/getTasks.php');
+    const res = await fetch('http://127.0.0.1/api/getTasks.php', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+      },
+    });
     const data = await res.json();
     allTaskList.value = data.map((task: any) => ({
       ...task,
