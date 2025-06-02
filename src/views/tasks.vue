@@ -12,6 +12,7 @@
         :key="task.ID"
         :task="task"
         @dragstart="onDragStart"
+        @update:list="fetchTaskList"
       />
     </TaskColumn>
   </div>

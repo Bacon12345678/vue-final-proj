@@ -1,6 +1,7 @@
 <?php
     header('Content-Type: application/json'); // JSON 回應格式
-
+    
+    include './cors.php';
     include "../configs/db_connect.php";
 
     $sql = "SELECT * FROM Tasks";
